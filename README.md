@@ -9,10 +9,10 @@ This tutorial will guide you through automating the provisioning, configuration,
 ## Requirements
 
 Before starting, ensure you have the following tools installed/available:
-    - An AWS Account (and associated credentials that allow you to create resources)
-    - AWS CLI (version 2.15+)
-    - Terraform (version 1.8+)
-    - Ansible (version 2.17+)
+- An AWS Account (and associated credentials that allow you to create resources)
+- AWS CLI (version 2.15+)
+- Terraform (version 1.8+)
+- Ansible (version 2.17+)
 
 ### Setting Up and Installing the Necessary Tools
 
@@ -61,6 +61,8 @@ graph TD;
     D --> E[Configure Auto-Restart with Ansible]
     E --> F[Connect to Minecraft Server]
 ```
+
+**(*Graph is viewable on Github repository*)**
 
 ---
 
@@ -113,4 +115,11 @@ By following these steps, you have automated the process of setting up a Minecra
 ---
 
 ## References
-- 
+
+- [AWS EC2 Documentation](https://docs.aws.amazon.com/ec2/)
+- [Terraform Documentation](https://developer.hashicorp.com/terraform/docs)
+- [Building infrastructure with Terraform](https://developer.hashicorp.com/terraform/tutorials/aws-get-started/aws-build)
+- [Ansible Documentation](https://docs.ansible.com/)
+- [itzg/minecraft-server Docker Image](https://hub.docker.com/r/itzg/minecraft-server)
+- [How to Install Docker on EC2 and create a container](https://medium.com/@mehmetodabashi/how-to-install-docker-on-ec2-and-create-a-container-75ca88e342d2)
+- [How To Use Systemctl to Manage Systemd Services and Units](https://www.digitalocean.com/community/tutorials/how-to-use-systemctl-to-manage-systemd-services-and-units)
