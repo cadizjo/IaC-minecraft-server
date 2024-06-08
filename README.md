@@ -74,12 +74,14 @@ chmod +x deploy.bash
 bash deploy.bash
 ```
 
+Enter `yes` when prompted for connection to the server and then wait for the Ansible playbook to configure the instance.
+
 Here is the full list of commands we will run in our *bash* script along with brief explanations of what each of them do:
 ```bash
 #!/bin/bash
 
 # Navigate to the Terraform directory and install the necessary providers
-cd terraform
+cd terraform-scripts
 terraform init
 
 # Format and validate the EC2 configuration file
@@ -89,20 +91,27 @@ terraform validate
 # Apply the EC2 instance configurations specified in main.tf
 terraform apply -auto-approve
 
-# Extract the public IP of the newly created EC2 instance
-instance_ip=$(terraform output -raw instance_public_ip)
+# Extract the public IP and private key associated with the newly created EC2 instance
+INSTANCE_IP=$(terraform output -raw instance_public_ip)
+PRIVATE_KEY_PEM=$(terraform output -raw private_key_pem)
 
-# Retrieve the private key and save it to a file
-terraform output -raw private_key_pem > ../ansible/minecraft_key.pem
-chmod 400 ../ansible/minecraft_key.pem
+# Save the private key to a file and set permissions
+echo "$PRIVATE_KEY_PEM" > ../ansible-scripts/minecraft_key.pem
+chmod 400 ../ansible-scripts/minecraft_key.pem
 
-# Update the Ansible inventory file with the instance IP
-echo "[minecraft]" > ../ansible/inventory.ini
-echo "$instance_ip" >> ../ansible/inventory.ini
+# Update Ansible inventory with the new instance public IP
+echo "[minecraft]" > ../ansible-scripts/inventory.ini
+echo "$INSTANCE_IP ansible_user=ec2-user ansible_ssh_private_key_file=minecraft_key.pem" >> ../ansible-scripts/inventory.ini
 
-# Navigate to the Ansible directory and run the playbook against our managed node (the EC2 instance) to configure the minecraft server
-cd ../ansible
-ansible-playbook -i inventory.ini --private-key minecraft_key.pem playbook.yml
+# Wait for the instance to initialize (add a delay to ensure SSH is available)
+sleep 100  
+
+# Run Ansible playbook on inventory nodes specified (EC2 instance)
+cd ../ansible-scripts
+ansible-playbook -i inventory.ini playbook.yml
+
+# Print Minecraft Server's Public IP address
+echo "Minecraft Server IP address: $INSTANCE_IP"
 ```
 
 ---
